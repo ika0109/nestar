@@ -2,6 +2,7 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { ObjectId } from 'mongoose';
 import { MemberAuthType, MemberStatus, MemberType } from '../../enums/member.enum';
 
+//VALIDATION (DTO) => BACKEND from FRONTAND
 @ObjectType()
 export class Member {
 	@Field(() => String)
@@ -38,6 +39,7 @@ export class Member {
 
 	@Field(() => Int)
 	memberProperties: number;
+
 	@Field(() => Int)
 	memberArticles: number;
 
@@ -64,6 +66,7 @@ export class Member {
 
 	@Field(() => Int)
 	memberWarnings: number;
+
 	@Field(() => Int)
 	memberBlocks: number;
 

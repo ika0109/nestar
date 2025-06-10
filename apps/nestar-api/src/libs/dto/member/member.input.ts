@@ -19,7 +19,7 @@ export class MemberInput {
 	memberPhone: string;
 
 	@IsOptional()
-	@Field(() => MemberAuthType, { nullable: true })
+	@Field(() => MemberType, { nullable: true })
 	memberType?: MemberType;
 
 	@IsOptional()
