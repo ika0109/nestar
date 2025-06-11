@@ -1,9 +1,15 @@
-function reverseInteger(number) {
-	const reversed = number.toString().split('').reverse().join('');
-	return parseInt(reversed);
+function satrniKebabga(satr) {
+	return satr.toLowerCase().replaceAll(' ', '-');
 }
 
-console.log(reverseInteger(123456789));
+console.log(satrniKebabga('I love kebab'));
+
+// function reverseInteger(number) {
+// 	const reversed = number.toString().split('').reverse().join('');
+// 	return parseInt(reversed);
+// }
+
+// console.log(reverseInteger(123456789));
 // function printNumbers() {
 // 	let i = 1;
 
