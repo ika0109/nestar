@@ -61,6 +61,7 @@ export class MemberService {
 	}
 	public async updateMemberByAdmin(): Promise<string> {
 		console.log('Query: updateMemberByAdmin');
+
 		return 'updateMemberByAdmin executed!';
 	}
 }

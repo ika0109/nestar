@@ -4,6 +4,8 @@ import { Member } from '../../libs/dto/member/member';
 
 import { JwtService } from '@nestjs/jwt';
 import { T } from '../../libs/types/common';
+import { shapeIntoMongooseObjectId } from '../../libs/config';
+
 @Injectable()
 export class AuthService {
 	constructor(private jwtService: JwtService) {}
@@ -27,6 +29,7 @@ export class AuthService {
 
 	public async verifyToken(token: string): Promise<Member> {
 		const member = await this.jwtService.verifyAsync(token);
+		member._id = shapeIntoMongooseObjectId(member._id);
 		return member;
 	}
 }
