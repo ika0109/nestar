@@ -54,4 +54,13 @@ export class MemberService {
 		console.log('Query:  getMember');
 		return 'getMember executed!';
 	}
+
+	public async getAllMembersByAdmin(): Promise<string> {
+		console.log('Mutation:  getAllMembersByAdmin');
+		return ' getAllMembersByAdmin executed!';
+	}
+	public async updateMemberByAdmin(): Promise<string> {
+		console.log('Query: updateMemberByAdmin');
+		return 'updateMemberByAdmin executed!';
+	}
 }
