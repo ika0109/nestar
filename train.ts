@@ -1,8 +1,13 @@
-function satrniKebabga(satr) {
-	return satr.toLowerCase().replaceAll(' ', '-');
+function rotateArray(arr, index) {
+	return arr.slice(index + 1).concat(arr.slice(0, index + 1));
 }
+console.log(rotateArray([1, 2, 3, 4, 5, 6], 3));
 
-console.log(satrniKebabga('I love kebab'));
+// function satrniKebabga(satr) {
+// 	return satr.toLowerCase().replaceAll(' ', '-');
+// }
+
+// console.log(satrniKebabga('I love kebab'));
 
 // function reverseInteger(number) {
 // 	const reversed = number.toString().split('').reverse().join('');
