@@ -1,7 +1,8 @@
+import { MemberAuthType, MemberStatus } from './../../enums/member.enum';
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { IsIn, IsNotEmpty, IsOptional, Length, Min } from 'class-validator';
-import { MemberAuthType, MemberType } from '../../enums/member.enum';
-import { availableAgentSort } from '../../config';
+import { MemberType } from '../../enums/member.enum';
+import { availableAgentSort, availableMemberSort } from '../../config';
 import { Direction } from '../../enums/common.enum';
 
 @InputType()
@@ -25,8 +26,8 @@ export class MemberInput {
 	memberType?: MemberType;
 
 	@IsOptional()
-	@Field(() => MemberAuthType, { nullable: true })
-	memberAuthType?: MemberAuthType;
+	@Field(() => MemberType, { nullable: true })
+	MemberAuthType?: MemberAuthType;
 }
 
 @InputType()
@@ -43,13 +44,14 @@ export class LoginInput {
 }
 
 @InputType()
-class AISearch{
-	@IsNotEmpty()
+class AISearch {
+	@IsOptional()
 	@Field(() => String, { nullable: true })
-	text?: string
+	text?: string;
 }
+
 @InputType()
-export class AgentsInquery {
+export class AgentsInquiry {
 	@IsNotEmpty()
 	@Min(1)
 	@Field(() => Int)
@@ -61,7 +63,7 @@ export class AgentsInquery {
 	limit: number;
 
 	@IsOptional()
-	@IsIn([availableAgentSort])
+	@IsIn(availableAgentSort)
 	@Field(() => String, { nullable: true })
 	sort?: string;
 
@@ -70,6 +72,48 @@ export class AgentsInquery {
 	direction?: Direction;
 
 	@IsNotEmpty()
-	@Field(() =>AISearch  )
-	search: AISearch
+	@Field(() => AISearch)
+	search: AISearch;
+}
+
+//================
+
+@InputType()
+class MISearch {
+	@IsOptional()
+	@Field(() => MemberStatus, { nullable: true })
+	memberStatus?: MemberStatus;
+
+	@IsOptional()
+	@Field(() => MemberType, { nullable: true })
+	memberType?: MemberType;
+
+	@IsOptional()
+	@Field(() => String, { nullable: true })
+	text?: string;
+}
+@InputType()
+export class MembersInquiry {
+	@IsNotEmpty()
+	@Min(1)
+	@Field(() => Int)
+	page: number;
+
+	@IsNotEmpty()
+	@Min(1)
+	@Field(() => Int)
+	limit: number;
+
+	@IsOptional()
+	@IsIn(availableMemberSort)
+	@Field(() => String, { nullable: true })
+	sort?: string;
+
+	@IsOptional()
+	@Field(() => Direction, { nullable: true })
+	direction?: Direction;
+
+	@IsNotEmpty()
+	@Field(() => MISearch)
+	search: MISearch;
 }
