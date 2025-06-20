@@ -56,20 +56,23 @@ export class MemberService {
 	public async updateMember(memberId: ObjectId, input: MemberUpdate): Promise<Member> {
 		const result: Member = await this.memberModel
 			.findOneAndUpdate({ _id: memberId, memberStatus: MemberStatus.ACTIVE }, input, { new: true })
-			.exec();
+			.exec(); // filter, update, option
 		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
 		result.accsessToken = await this.authService.createToken(result);
 		return result;
 	}
 
 	public async getMember(memberId: ObjectId, targetId: ObjectId): Promise<Member> {
+		//  2 parametr bor
 		const search: T = {
-			_id: targetId,
+			//object yasab search degan variablega teglayapmiz
+			_id: targetId, //targetID va memberId memberstatus active va block bogan userni topib ber
 			memberStatus: {
 				$in: [MemberStatus.ACTIVE, MemberStatus.BLOCK],
 			},
 		};
-		const targetMember = await this.memberModel.findOne(search).exec();
+		const targetMember = await this.memberModel.findOne(search).lean().exec(); //search argument sifatida pass qilib
+		//await qilib targetmemberga tengladik
 		if (!targetMember) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
 		if (memberId) {
@@ -77,10 +80,12 @@ export class MemberService {
 			const viewInput = { memberId: memberId, viewRefId: targetId, viewGroup: ViewGroup.MEMBER };
 
 			const newView = await this.viewService.recordView(viewInput);
+			//agar memberimiz malum bolsa viewni tekshiryapmiz
 			// increase memberView
 			if (newView) await this.memberModel.findOneAndUpdate(search, { $inc: { memberViews: 1 } }, { new: true }).exec();
 			targetMember.memberViews++;
 		}
+		//agar view bolmasa oshiryapmiz
 		return targetMember;
 	}
 
@@ -102,7 +107,10 @@ export class MemberService {
 						metaCounter: [{ $count: 'total' }],
 					},
 				},
-			])
+			]) //$facet — bu bir vaqtning o‘zida bir nechta parallel pipeline ishlatish imkonini beradi.
+			//list — bu sahifalangan agentlar ro‘yxati.
+
+			// metaCounter — bu agentlar soni (sahifalashda jami nechta borligini bilish uchun).
 			.exec();
 		console.log('result==', result);
 		if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
