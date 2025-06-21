@@ -1,20 +1,41 @@
-function areParenthesesBalanced(str) {
-	let count = 0;
+function areArraysEqual(arr1, arr2) {
+	const count = (arr) => {
+		return arr.reduce((acc, val) => {
+			acc[val] = (acc[val] || 0) + 1;
+			return acc;
+		}, {});
+	};
 
-	for (let char of str) {
-		if (char === '(') count++;
-		else if (char === ')') count--;
+	const count1 = count(arr1);
+	const count2 = count(arr2);
 
-		if (count < 0) return false;
-	}
-
-	return count === 0;
+	return (
+		Object.keys(count1).length === Object.keys(count2).length &&
+		Object.keys(count1).every((key) => count1[key] === count2[key])
+	);
 }
 
-console.log(areParenthesesBalanced('string()ichida(qavslar)soni()balansda'));
-console.log(areParenthesesBalanced('string((ichida)qavslar)'));
-console.log(areParenthesesBalanced('string(ichida(qavslar)'));
-console.log(areParenthesesBalanced(')('));
+console.log(areArraysEqual([1, 2, 3], [3, 1, 2]));
+console.log(areArraysEqual([1, 2, 3], [3, 1, 2, 1]));
+console.log(areArraysEqual([1, 2, 3], [4, 1, 2]));
+
+// function areParenthesesBalanced(str) {
+// 	let count = 0;
+
+// 	for (let char of str) {
+// 		if (char === '(') count++;
+// 		else if (char === ')') count--;
+
+// 		if (count < 0) return false;
+// 	}
+
+// 	return count === 0;
+// }
+
+// console.log(areParenthesesBalanced('string()ichida(qavslar)soni()balansda'));
+// console.log(areParenthesesBalanced('string((ichida)qavslar)'));
+// console.log(areParenthesesBalanced('string(ichida(qavslar)'));
+// console.log(areParenthesesBalanced(')('));
 
 // / function rotateArray(arr, index) {
 // 	return arr.slice(index + 1).concat(arr.slice(0, index + 1));
