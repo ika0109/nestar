@@ -1,23 +1,21 @@
-function areArraysEqual(arr1, arr2) {
-	const count = (arr) => {
-		return arr.reduce((acc, val) => {
-			acc[val] = (acc[val] || 0) + 1;
-			return acc;
-		}, {});
-	};
+function findDuplicates(arr) {
+	const count = {};
+	const result = [];
 
-	const count1 = count(arr1);
-	const count2 = count(arr2);
+	for (const num of arr) {
+		count[num] = (count[num] || 0) + 1;
+	}
 
-	return (
-		Object.keys(count1).length === Object.keys(count2).length &&
-		Object.keys(count1).every((key) => count1[key] === count2[key])
-	);
+	for (const key in count) {
+		if (count[key] > 1) {
+			result.push(Number(key));
+		}
+	}
+
+	return result;
 }
 
-console.log(areArraysEqual([1, 2, 3], [3, 1, 2]));
-console.log(areArraysEqual([1, 2, 3], [3, 1, 2, 1]));
-console.log(areArraysEqual([1, 2, 3], [4, 1, 2]));
+console.log(findDuplicates([1, 2, 3, 4, 5, 4, 3, 4]));
 
 // function areParenthesesBalanced(str) {
 // 	let count = 0;
