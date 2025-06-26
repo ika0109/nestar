@@ -1,21 +1,20 @@
-function findDuplicates(arr) {
-	const count = {};
-	const result = [];
+function countNumberAndLetters(str) {
+	let result = { number: 0, letter: 0 };
 
-	for (const num of arr) {
-		count[num] = (count[num] || 0) + 1;
-	}
-
-	for (const key in count) {
-		if (count[key] > 1) {
-			result.push(Number(key));
+	for (let char of str) {
+		if (/[0-9]/.test(char)) {
+			result.number++;
+		} else if (/[a-zA-Z]/.test(char)) {
+			result.letter++;
 		}
 	}
 
 	return result;
 }
 
-console.log(findDuplicates([1, 2, 3, 4, 5, 4, 3, 4]));
+
+console.log(countNumberAndLetters('string152%\\¥'));
+
 
 // function areParenthesesBalanced(str) {
 // 	let count = 0;
