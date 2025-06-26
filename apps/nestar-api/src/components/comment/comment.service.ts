@@ -102,16 +102,12 @@ export class CommentService {
 		return result[0];
 	}
 
-	// public async commentStatsEditor(input: StatisticModifier): Promise<BoardArticle> {
-	//         const { _id, targetKey, modifier } = input;
-	//         return await this.boardArticleModel
-	//             .findByIdAndUpdate(
-	//                 _id,
-	//                 {
-	//                     $inc: { [targetKey]: modifier },
-	//                 },
-	//                 { new: true },
-	//             )
-	//             .exec();
-	//     }
+	// ADMIN
+
+	public async removePropertyByAdmin(input: ObjectId): Promise<Comment> {
+		const result = await this.commentModel.findByIdAndDelete(input).exec();
+		if (!result) throw new InternalServerErrorException(Message.REMOVE_FAILED);
+
+		return result;
+	}
 }
