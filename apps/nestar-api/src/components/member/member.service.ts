@@ -89,6 +89,10 @@ export class MemberService {
 			targetMember.memberViews++;
 		}
 		//agar view bolmasa oshiryapmiz
+
+		const likeInput = { memberId: memberId, likeRefId: targetId, likeGroup: LikeGroup.MEMBER };
+		targetMember.meLiked = await this.likeService.checkLikeExistence(likeInput);
+
 		return targetMember;
 	}
 
@@ -121,7 +125,7 @@ export class MemberService {
 	}
 
 	public async likeTargetMember(memberId: ObjectId, likeRefId: ObjectId): Promise<Member> {
-		const target:  Member = await this.memberModel.findOne({ _id: likeRefId, memberStatus: MemberStatus.ACTIVE }).exec();
+		const target: Member = await this.memberModel.findOne({ _id: likeRefId, memberStatus: MemberStatus.ACTIVE }).exec();
 		if (!target) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
 		const input: LikeInput = {
@@ -130,7 +134,6 @@ export class MemberService {
 			likeGroup: LikeGroup.MEMBER,
 		};
 
-		
 		const modifier: number = await this.likeService.toggleLike(input);
 		const result = await this.memberStatusEditor({ _id: likeRefId, targetKey: 'memberLikes', modifier: modifier });
 

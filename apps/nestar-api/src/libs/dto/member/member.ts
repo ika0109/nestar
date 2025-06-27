@@ -1,6 +1,7 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { ObjectId } from 'mongoose';
 import { MemberAuthType, MemberStatus, MemberType } from '../../enums/member.enum';
+import { MeLiked } from '../like/like';
 
 //VALIDATION (DTO) => BACKEND from FRONTAND
 @ObjectType()
@@ -81,6 +82,10 @@ export class Member {
 
 	@Field(() => String, { nullable: true })
 	accsessToken?: string;
+
+	//** from aggregation */
+	@Field(() => [MeLiked], { nullable: true })
+	meLiked?: MeLiked[];
 }
 
 @ObjectType()
