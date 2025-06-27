@@ -1,19 +1,19 @@
-function countNumberAndLetters(str) {
-	let result = { number: 0, letter: 0 };
+// function countNumberAndLetters(str) {
+// 	let result = { number: 0, letter: 0 };
 
-	for (let char of str) {
-		if (/[0-9]/.test(char)) {
-			result.number++;
-		} else if (/[a-zA-Z]/.test(char)) {
-			result.letter++;
-		}
-	}
+// 	for (let char of str) {
+// 		if (/[0-9]/.test(char)) {
+// 			result.number++;
+// 		} else if (/[a-zA-Z]/.test(char)) {
+// 			result.letter++;
+// 		}
+// 	}
 
-	return result;
-}
+// 	return result;
+// }
 
 
-console.log(countNumberAndLetters('string152%\\¥'));
+// console.log(countNumberAndLetters('string152%\\¥'));
 
 
 // function areParenthesesBalanced(str) {
