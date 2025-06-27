@@ -65,7 +65,7 @@ export class MemberResolver {
 		console.log('Query: getMember');
 		const targetId = shapeIntoMongooseObjectId(input); // kirib kelayotgan target id shaping qildik
 		return await this.memberService.getMember(memberId, targetId);
-		//argument sifatida memberId, targetID sifatida pass qildik
+		//argument sifatida memberId, targetID  pass qildik
 	}
 
 	@UseGuards(WithoutGuard)
@@ -73,6 +73,18 @@ export class MemberResolver {
 	public async getAgents(@Args('input') input: AgentsInquiry, @AuthMember('_id') memberId: ObjectId): Promise<Members> {
 		console.log('Query: getAgents');
 		return await this.memberService.getAgents(memberId, input);
+	}
+
+	@UseGuards(AuthGuard)
+	@Mutation(() => Member)
+	public async likeTargetMember(
+		@Args('memberId') input: string,
+
+		@AuthMember('_id') memberId: ObjectId,
+	): Promise<Member> {
+		console.log('Mutation: likeTargetMember');
+		const likeRefId = shapeIntoMongooseObjectId(input);
+		return await this.memberService.likeTargetMember(memberId, likeRefId);
 	}
 
 	/**ADMIN */
