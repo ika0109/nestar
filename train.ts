@@ -1,3 +1,7 @@
+const singleNumber2 = (nums) => nums.find((num) => nums.filter((x) => x === num).length === 1);
+
+console.log(singleNumber2([4, 2, 1, 2, 1]));
+
 // function countNumberAndLetters(str) {
 // 	let result = { number: 0, letter: 0 };
 
@@ -12,9 +16,7 @@
 // 	return result;
 // }
 
-
 // console.log(countNumberAndLetters('string152%\\¥'));
-
 
 // function areParenthesesBalanced(str) {
 // 	let count = 0;
