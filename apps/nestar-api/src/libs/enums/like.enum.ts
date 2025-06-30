@@ -8,3 +8,4 @@ export enum LikeGroup {
 registerEnumType(LikeGroup, {
 	name: 'LikeGroup',
 });
+

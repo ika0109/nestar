@@ -2,7 +2,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { ObjectId } from 'mongoose';
 import { Member, TotalCounter } from '../member/member';
 import { MeLiked } from '../like/like';
-
+// databasedan chqib ketedigon malumotlar 
 @ObjectType()
 export class MeFollowed {
 	@Field(() => String)
@@ -12,11 +12,11 @@ export class MeFollowed {
 	followerId: ObjectId;
 
 	@Field(() => Boolean)
-	myFollowing: boolean;
+	myFollowing: boolean; // men podpiska bolgan bolmaganlik tekshiriladi
 }
 
 @ObjectType()
-export class Follower {
+export class Follower {// menga tegishlik malumotlarni kimga follow qilyapman
 	@Field(() => String)
 	_id: ObjectId;
 
@@ -45,9 +45,9 @@ export class Follower {
 }
 
 @ObjectType()
-export class Following {
+export class Following {// siz follow bolgan kishi
 	@Field(() => String)
-	_id: ObjectId;
+	_id: ObjectId; // database ozini idsi
 
 	@Field(() => String)
 	followingId: ObjectId;

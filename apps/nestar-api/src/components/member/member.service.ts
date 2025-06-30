@@ -72,7 +72,7 @@ export class MemberService {
 		const search: T = {
 			//object yasab search degan variablega teglayapmiz
 			_id: targetId, //targetID va memberId memberstatus active va block bogan userni topib ber
-			memberStatus: {
+			memberStatus: { //property _id, memberStatus
 				$in: [MemberStatus.ACTIVE, MemberStatus.BLOCK],
 			},
 		};
@@ -93,7 +93,7 @@ export class MemberService {
 		//agar view bolmasa oshiryapmiz
 
 		const likeInput = { memberId: memberId, likeRefId: targetId, likeGroup: LikeGroup.MEMBER };
-		targetMember.meLiked = await this.likeService.checkLikeExistence(likeInput);
+		targetMember.meLiked = await this.likeService.checkLikeExistence(likeInput); //targetmember objectni melikedga tenglayapmiz
 
 		targetMember.meFollowed = await this.checkSubscription(memberId, targetId);
 

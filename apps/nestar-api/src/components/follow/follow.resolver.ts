@@ -24,7 +24,7 @@ export class FollowResolver {
 	@Mutation(() => Follower)
 	public async unsubscribe(
 		@Args('input') input: string,
-		@AuthMember('_id') memberId: ObjectId, //
+		@AuthMember('_id') memberId: ObjectId, 
 	): Promise<Follower> {
 		console.log('Mutation: unsubscribe');
 		const followingId = shapeIntoMongooseObjectId(input);
@@ -37,7 +37,7 @@ export class FollowResolver {
 		@AuthMember('_id') memberId: ObjectId,
 	): Promise<Followings> {
 		console.log('Query: getMemberFollowings');
-		const { followerId } = input.search;
+		const { followerId } = input.search; // inputmiz ichidagi searchni destriction qilib followerID olyapmiz
 		input.search.followerId = shapeIntoMongooseObjectId(followerId);
 		return await this.followService.getMemberFollowings(memberId, input);
 	}

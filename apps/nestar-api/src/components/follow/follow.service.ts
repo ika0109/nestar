@@ -16,7 +16,7 @@ export class FollowService {
 	) {}
 
 	public async subscribe(followerId: ObjectId, followingId: ObjectId): Promise<Follower> {
-		if (followerId.toString() === followingId.toString()) {
+		if (followerId.toString() === followingId.toString()) { // string ozgartirib agar eng bolsa 
 			throw new InternalServerErrorException(Message.SELF_SUBSCRIPTION_DENIED);
 		}
 
@@ -30,7 +30,7 @@ export class FollowService {
 
 		return result;
 	}
-	private async registerSubscription(followerId: ObjectId, followingId: ObjectId): Promise<Follower> {
+	private async registerSubscription(followerId: ObjectId, followingId: ObjectId): Promise<Follower> { // follow datalrni create qilyapti
 		try {
 			return await this.followModel.create({
 				followingId: followingId,
@@ -59,23 +59,24 @@ export class FollowService {
 	}
 
 	public async getMemberFollowings(memberId: ObjectId, input: FollowInquiry): Promise<Followings> {
-		const { page, limit, search } = input;
-		const match: T = { followerId: search?.followerId };
+		const { page, limit, search } = input; 
+		if (!search?.followingId) throw new InternalServerErrorException(Message.BAD_REQUEST);// searchni ichida followerID bolmasa
+		const match: T = { followerId: search?.followerId }; // match objectni yasavolyapmiz followerIDni seaarch ichidagi followerid dib oylapmiz
 		console.log('match:', match);
 
 		const result = await this.followModel
-			.aggregate([
+			.aggregate([// arrayni argument sifati beryapmiz  Array objectlardan iborat// array nima uchun ketma-ktlik uchun
 				{ $match: match },
-				{ $sort: { createdAt: Direction.DESC } },
+				{ $sort: { createdAt: Direction.DESC } }, // direction desending
 				{
 					$facet: {
 						list: [
-							{ $skip: (page - 1) * limit },
-							{ $limit: limit },
+							{ $skip: (page - 1) * limit }, // nechta data otakazib yuborish
+							{ $limit: limit }, // mnechta korsatish 
 
 							// metaData
 							// aggregated
-							lookupFollowingData,
+							lookupFollowingData, // lookupdan member  malumotlarni olyapmiz
 							{ $unwind: '$followingData' },
 						],
 						metaCounter: [{ $count: 'total' }],
