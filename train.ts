@@ -1,6 +1,16 @@
-const singleNumber2 = (nums) => nums.find((num) => nums.filter((x) => x === num).length === 1);
+function firstUniqueCharIndex(str) {
+	for (let i = 0; i < str.length; i++) {
+		if (str.indexOf(str[i]) === str.lastIndexOf(str[i])) {
+			return i;
+		}
+	}
+	return -1;
+}
 
-console.log(singleNumber2([4, 2, 1, 2, 1]));
+// Misollar:
+console.log(firstUniqueCharIndex('stamp'));
+console.log(firstUniqueCharIndex('aabbccdde'));
+console.log(firstUniqueCharIndex('aabb'));
 
 // function countNumberAndLetters(str) {
 // 	let result = { number: 0, letter: 0 };
