@@ -42,8 +42,8 @@ export class LikeService {
 	}
 
 	public async getFavoriteProperties(memberId: ObjectId, input: OrdinaryInquiry): Promise<Properties> {
-		const { page, limit } = input;
-		const match: T = { likeGroup: LikeGroup.PROPERTY, memberId: memberId };
+		const { page, limit } = input; //destraktion inputni ichida page,limit qabul qilyapti
+		const match: T = { likeGroup: LikeGroup.PROPERTY, memberId: memberId }; // match object quryappmiz
 
 		const data: T = await this.likeModel
 			.aggregate([

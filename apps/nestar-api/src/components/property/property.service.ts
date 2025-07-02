@@ -107,7 +107,7 @@ export class PropertyService {
 						list: [
 							{ $skip: (input.page - 1) * input.limit },
 							{ $limit: input.limit },
-							lookupAuthMemberLiked(memberId),
+							lookupAuthMemberLiked(memberId), // bir va birdan ortiq bolgan qiymatlarni datasetlarni solishtirish
 							lookupMember,
 							{ $unwind: '$memberData' },
 						],

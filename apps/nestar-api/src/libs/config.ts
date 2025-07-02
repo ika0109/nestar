@@ -15,7 +15,7 @@ export const availablePropertySorts = [
 	'propertyRank',
 	'propertyPrice',
 ];
-
+// MOngoDb va Mongoiosega daxldor bolgan mantiqlar yzoilgan
 export const availableBoardArticleSorts = ['createdAt', 'updatedAt', 'articleLikes', 'articleViews'];
 export const availableCommentSorts = ['createdAt', 'updatedAt'];
 //** IMAGE CONFIGURATION  */
@@ -32,11 +32,11 @@ export const getSerialForImage = (filename: string) => {
 export const shapeIntoMongooseObjectId = (target: any) => {
 	return typeof target === 'string' ? new ObjectId(target) : target;
 };
-
+// *Bu funksiya siz biror itemga (masalan: post, article, user...) "like" bosganmisiz yo‘qmi — shuni aniqlaydi. Ya'ni, likes kolleksiyasidan mos tushadigan likeni qidiradi.
 export const lookupAuthMemberLiked = (memberId: T, targetRefId: string = '$_id') => ({
 	$lookup: {
 		from: 'likes',
-		let: {
+		let: {// search mexanizm uchun yordamga keladigan variable tashkil qildik
 			localLikeRefId: targetRefId,
 			localMemberId: memberId,
 			localMyFavorite: true,
@@ -46,14 +46,14 @@ export const lookupAuthMemberLiked = (memberId: T, targetRefId: string = '$_id')
 				$match: {
 					$expr: {
 						$and: [
-							{ $eq: [{ $toString: '$likeRefId' }, { $toString: '$$localLikeRefId' }] },
+							{ $eq: [{ $toString: '$likeRefId' }, { $toString: '$$localLikeRefId' }] },//experession, equal solishtiryapmiz
 							{ $eq: [{ $toString: '$memberId' }, { $toString: '$$localMemberId' }] },
 						],
 					},
 				},
 			},
 			{
-				$project: {
+				$project: {// MeLiked shakllantiryapmiz ichidagi 3 ta narsani
 					_id: 0,
 					memberId: 1,
 					likeRefId: 1,
