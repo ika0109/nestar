@@ -1,17 +1,9 @@
-function firstUniqueCharIndex(str) {
-	for (let i = 0; i < str.length; i++) {
-		if (str.indexOf(str[i]) === str.lastIndexOf(str[i])) {
-			return i;
-		}
-	}
-	return -1;
+function sumOfUnique(arr) {
+	return arr.filter((num) => arr.indexOf(num) === arr.lastIndexOf(num)).reduce((sum, num) => sum + num, 0);
 }
-
-// Misollar:
-console.log(firstUniqueCharIndex('stamp'));
-console.log(firstUniqueCharIndex('aabbccdde'));
-console.log(firstUniqueCharIndex('aabb'));
-
+console.log(sumOfUnique([1, 2, 3, 2]));
+console.log(sumOfUnique([1, 1, 1, 1]));
+console.log(sumOfUnique([5, 6, 7, 8]));
 // function countNumberAndLetters(str) {
 // 	let result = { number: 0, letter: 0 };
 
