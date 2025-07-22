@@ -32,7 +32,7 @@ export class MemberService {
 		try {
 			const result = await this.memberModel.create(input);
 			//TODO: Authentication via TOKEN
-			result.accsessToken = await this.authService.createToken(result);
+			result.accessToken = await this.authService.createToken(result);
 			return result;
 		} catch (err) {
 			console.log('Error, Service.model:', err.message);
@@ -55,7 +55,7 @@ export class MemberService {
 
 		const isMatch = await this.authService.comparePassword(input.memberPassword, response.memberPassword);
 		if (!isMatch) throw new InternalServerErrorException(Message.WRONG_PASSWORD);
-		response.accsessToken = await this.authService.createToken(response);
+		response.accessToken = await this.authService.createToken(response);
 		return response;
 	}
 
@@ -64,7 +64,7 @@ export class MemberService {
 			.findOneAndUpdate({ _id: memberId, memberStatus: MemberStatus.ACTIVE }, input, { new: true })
 			.exec(); // filter, update, option
 		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
-		result.accsessToken = await this.authService.createToken(result);
+		result.accessToken = await this.authService.createToken(result);
 		return result;
 	}
 

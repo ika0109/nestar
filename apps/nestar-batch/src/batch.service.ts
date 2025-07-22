@@ -8,12 +8,14 @@ import { Model } from 'mongoose';
 
 @Injectable()
 export class BatchService {
-	constructor(
+	constructor(// Bu joyda MongoDB model lar chaqirilyapti: Property va Member. Ular orqali ma’lumotlar o‘qiladi va yangilanadi.
+
+
 		@InjectModel('Property') private readonly propertyModel: Model<Property>,
 		@InjectModel('Member') private readonly memberModel: Model<Member>,
 	) {}
 
-	public async batchRollback(): Promise<void> {
+	public async batchRollback(): Promise<void> {//Har kuni ertalab bu yerda agentlar va property'lar reytingi nolga tushiriladi. Bu – yangidan hisoblash uchun.
 		await this.memberModel
 			.updateMany(
 				{
@@ -38,7 +40,7 @@ export class BatchService {
 			.exec();
 	}
 
-	public async batchTopProperties(): Promise<void> {
+	public async batchTopProperties(): Promise<void> {//Hozirgi aktiv property’lar olinadi (faqat ranki 0 bo‘lganlar).
 		const properties: Property[] = await this.propertyModel
 			.find({
 				propertyStatus: PropertyStatus.ACTIVE,
@@ -55,10 +57,10 @@ export class BatchService {
 			});
 		});
 
-		await Promise.all(promiseList);
-	}
+		await Promise.all(promiseList);//wap qilyapi promise bilan hammasni wrap qilyapmiz
+	}//Har bir property uchun: rank = likes × 2 + views So‘ngra rank saqlanadi.
 
-	public async batchTopAgents(): Promise<void> {
+	public async batchTopAgents(): Promise<void> {//Faqat agentlar olinadi, hali ranki hisoblanmaganlar.
 		const agents: Member[] = await this.memberModel
 			.find({
 				memberType: MemberType.AGENT,
@@ -66,7 +68,7 @@ export class BatchService {
 				memberRank: 0,
 			})
 			.exec();
-
+//Har bir agent uchun: rank = properties×5 + articles×3 + likes×2 + views×1 Keyin memberRank yangilanadi.
 		const promiseList = agents.map(async (ele: Member) => {
 			const { _id, memberProperties, memberArticles, memberLikes, memberViews } = ele;
 
