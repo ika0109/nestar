@@ -49,7 +49,4 @@ export class MemberUpdate {
 	memberDesc?: string;
 
 	deletedAt?: Date;
-	// @IsOptional()
-	// @Field(() => MemberAuthType, { nullable: true })
-	// memberAuthType?: MemberAuthType;
 }

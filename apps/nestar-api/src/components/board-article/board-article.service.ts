@@ -32,7 +32,7 @@ export class BoardArticleService {
 		input.memberId = memberId;
 		try {
 			const result = await this.boardArticleModel.create(input);
-			await this.memberService.memberStatusEditor({
+			await this.memberService.memberStatsEditor({
 				_id: memberId,
 				targetKey: 'memberArticles',
 				modifier: 1,
@@ -83,7 +83,7 @@ export class BoardArticleService {
 		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
 
 		if (articleStatus === BoardArticleStatus.DELETE) {
-			await this.memberService.memberStatusEditor({
+			await this.memberService.memberStatsEditor({
 				_id: memberId,
 				targetKey: 'memberArticles',
 				modifier: -1,
@@ -193,7 +193,7 @@ export class BoardArticleService {
 		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
 
 		if (articleStatus === BoardArticleStatus.DELETE) {
-			await this.memberService.memberStatusEditor({
+			await this.memberService.memberStatsEditor({
 				_id: result.memberId,
 				targetKey: 'memberArticles',
 				modifier: -1,

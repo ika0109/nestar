@@ -1,8 +1,9 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
-import { Follower, Followers, Following, Followings } from '../../libs/dto/follow/follow';
-import { Model, ObjectId } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { Model, ObjectId } from 'mongoose';
+import { Follower, Followers, Following, Followings } from '../../libs/dto/follow/follow';
 import { MemberService } from '../member/member.service';
+import { AuthService } from '../auth/auth.service';
 import { Direction, Message } from '../../libs/enums/common.enum';
 import { FollowInquiry } from '../../libs/dto/follow/follow.input';
 import { T } from '../../libs/types/common';
@@ -17,12 +18,12 @@ import {
 export class FollowService {
 	constructor(
 		@InjectModel('Follow') private readonly followModel: Model<Follower | Following>,
-		private readonly memberService: MemberService,
+		private authService: AuthService,
+		private memberService: MemberService,
 	) {}
 
 	public async subscribe(followerId: ObjectId, followingId: ObjectId): Promise<Follower> {
 		if (followerId.toString() === followingId.toString()) {
-			// string ozgartirib agar eng bolsa
 			throw new InternalServerErrorException(Message.SELF_SUBSCRIPTION_DENIED);
 		}
 
@@ -31,20 +32,17 @@ export class FollowService {
 
 		const result = await this.registerSubscription(followerId, followingId);
 
-		await this.memberService.memberStatusEditor({ _id: followerId, targetKey: 'memberFollowings', modifier: 1 });
-		await this.memberService.memberStatusEditor({ _id: followingId, targetKey: 'memberFollowers', modifier: 1 });
+		await this.memberService.memberStatsEditor({ _id: followerId, targetKey: 'memberFollowings', modifier: 1 });
+		await this.memberService.memberStatsEditor({ _id: followingId, targetKey: 'memberFollowers', modifier: 1 });
 
 		return result;
 	}
+
 	private async registerSubscription(followerId: ObjectId, followingId: ObjectId): Promise<Follower> {
-		// follow datalrni create qilyapti
 		try {
-			return await this.followModel.create({
-				followingId: followingId,
-				followerId: followerId,
-			});
+			return await this.followModel.create({ followingId: followingId, followerId: followerId });
 		} catch (err) {
-			console.log('Error, Service.model:', err.message);
+			console.log('Error, Service.model: ', err.message);
 			throw new BadRequestException(Message.CREATE_FAILED);
 		}
 	}
@@ -53,14 +51,11 @@ export class FollowService {
 		const targetMember = await this.memberService.getMember(null, followingId);
 		if (!targetMember) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
-		const result = await this.followModel.findOneAndDelete({
-			followingId: followingId,
-			followerId: followerId,
-		});
+		const result = await this.followModel.findOneAndDelete({ followingId: followingId, followerId: followerId }).exec();
 		if (!result) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
-		await this.memberService.memberStatusEditor({ _id: followerId, targetKey: 'memberFollowings', modifier: -1 });
-		await this.memberService.memberStatusEditor({ _id: followingId, targetKey: 'memberFollowers', modifier: -1 });
+		await this.memberService.memberStatsEditor({ _id: followerId, targetKey: 'memberFollowings', modifier: -1 });
+		await this.memberService.memberStatsEditor({ _id: followingId, targetKey: 'memberFollowers', modifier: -1 });
 
 		return result;
 	}
@@ -85,7 +80,6 @@ export class FollowService {
 							lookupAuthMemberLiked(memberId, '$followingId'),
 							// meFollowed
 							lookupAuthMemberFollowed({ followerId: memberId, followingId: '$followingId' }),
-
 							lookupFollowingData,
 							{ $unwind: '$followingData' },
 						],
@@ -98,40 +92,6 @@ export class FollowService {
 
 		return result[0];
 	}
-
-	// public async getMemberFollowings(memberId: ObjectId, input: FollowInquiry): Promise<Followings> {
-	// 	const { page, limit, search } = input;
-	// 	if (!search?.followingId) throw new InternalServerErrorException(Message.BAD_REQUEST); // searchni ichida followerID bolmasa
-	// 	const match: T = { followerId: search?.followerId }; // match objectni yasavolyapmiz followerIDni seaarch ichidagi followerid dib oylapmiz
-	// 	console.log('match:', match);
-
-	// 	const result = await this.followModel
-	// 		.aggregate([
-	// 			// arrayni argument sifati beryapmiz  Array objectlardan iborat// array nima uchun ketma-ktlik uchun
-	// 			{ $match: match },
-	// 			{ $sort: { createdAt: Direction.DESC } }, // direction desending
-	// 			{
-	// 				$facet: {
-	// 					list: [
-	// 						{ $skip: (page - 1) * limit }, // nechta data otakazib yuborish
-	// 						{ $limit: limit }, // mnechta korsatish
-	// 						// meLiked
-	// 						lookupAuthMemberLiked(memberId, '$followingId'),
-	// 						// metaData
-	// 						// aggregated
-	// 						lookupFollowingData, // lookupdan member  malumotlarni olyapmiz
-	// 						{ $unwind: '$followingData' },
-	// 					],
-	// 					metaCounter: [{ $count: 'total' }],
-	// 				},
-	// 			},
-	// 		])
-	// 		.exec();
-
-	// 	if (!result.length) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
-
-	// 	return result[0];
-	// }
 
 	public async getMemberFollowers(memberId: ObjectId, input: FollowInquiry): Promise<Followers> {
 		const { page, limit, search } = input;
